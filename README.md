@@ -6,7 +6,7 @@ Dockerised [Transmission](https://en.wikipedia.org/wiki/Transmission_(BitTorrent
 The simplest use case is to volume a local directory to the `/downloads` directory of the container, and publish the web UI (9091) and BitTorrent ports (6881):
 
 ```
-docker run --detach --volume /your/download/dir:/data \
+docker run --detach --volume /your/download/dir:/downloads \
     --publish 9091:9091 --publish 6881:6881 caseyfw/transmission
 ```
 
@@ -18,20 +18,21 @@ Setting the following environment variables with the docker `--env` argument wil
 - `ALLOWED` comma separated whitelist of IP addresses allowed to access the web UI. Default: `*` (all IPs).
 - `DOWNLOAD_DIR` the directory in the container to put downloaded files. Default: `/downloads`. You probably don't want to change this, just volume a directory from your host machine to `/downloads` in the container.
 - `INCOMPLETE_DIR` the directory in the container to put incomplete downloads. Default: `/downloads/incomplete`.
+- `CONFIG_DIR` the directory transmission uses to read/store config. Default: `/etc/transmission`. Setting this, and voluming a `config.json` into the directory allows you to set configuration items that are not present here.
 - `PORT` the BitTorrent port. Default: `6881`. You probably don't want to change this, just map the port of your choosing to 6881 on the container using the `--publish` argument.
 - `WEB_PORT` the web UI port. Default: `9091`. You probably don't want to change this, just map the port of your choosing to 9091 on the container using the `--publish` argument.
 - `USERNAME` the web UI username. Default: `username`.
 - `PASSWORD` the web UI username. Default: `password`.
-- `UID` the user id to run Transmission as. Default: `0` (root). This is useful for ensuring downloads from Transmission are owned by the correct user. You probably want to set this to to `$(uid -u)` which is likely `1000`. See the example below.
+- `UID` the user id to run Transmission as. Default: `0` (root). This is useful for ensuring downloads from Transmission are owned by the correct user. You probably want to set this to `$(uid -u)` which is likely `1000`. See the example below.
 
 ## Example RaspberryPi usage
-This container is useful for running Transmission on a RaspberryPi. Here is a suggested command to start Transmission if you have already installed Docker:
+This container is useful for running Transmission on a RaspberryPi. Here is a suggested command to start Transmission if you have already [installed Docker](https://github.com/umiddelb/armhf/wiki/Get-Docker-up-and-running-on-the-RaspberryPi-(ARMv6)-in-three-steps):
 
 ```
 docker run --detach \
     --name transmission
     --restart=always \
-    --volume /home/pi/Downloads:/data \
+    --volume /home/pi/Downloads:/downloads \
     --publish 8080:9091 \
     --publish 6881:6881 \
     --env "UID=$(id -u)" \
