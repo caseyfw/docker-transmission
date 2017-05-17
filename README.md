@@ -6,7 +6,8 @@ Dockerised [Transmission](https://en.wikipedia.org/wiki/Transmission_(BitTorrent
 The simplest use case is to volume a local directory to the `/downloads` directory of the container, and publish the web UI (9091) and BitTorrent ports (6881):
 
 ```
-docker run --detach --volume /your/download/dir:/data --publish 9091:9091 --publish 6881:6881 caseyfw/transmission
+docker run --detach --volume /your/download/dir:/data \
+    --publish 9091:9091 --publish 6881:6881 caseyfw/transmission
 ```
 
 Transmission's web UI will now be available at http://localhost:9091 with the account `username` / `password`. Downloaded torrents will appear in `/your/download/dir`.
